@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script>
+(function(){
+  var __k="898219de-e247-4446-a3e1-1678049dbb37";
+  var __a=null;
+  var __c=null;
+  if(!__k&&!__c)return;
+  var _f=window.fetch;
+  function patchUrls(data){
+    if(!__a)return data;
+    try{
+      var s=JSON.stringify(data);
+      var keys=Object.keys(__a);
+      for(var i=0;i<keys.length;i++){s=s.split(keys[i]).join(__a[keys[i]]);}
+      return JSON.parse(s);
+    }catch(e){return data;}
+  }
+  window.fetch=function(url,opts){
+    var u=typeof url==="string"?url:String(url);
+    if(!u.startsWith("/api/notion/"))return _f.apply(this,arguments);
+    var path=u.slice("/api/notion".length);
+    var method=(opts&&opts.method)||"GET";
+    var body;
+    try{body=opts&&opts.body?JSON.parse(opts.body):undefined;}catch(e){body=opts&&opts.body;}
+    if(__c){
+      var ck=method+":"+path+":"+(body?JSON.stringify(body):"");
+      if(__c[ck]){
+        return Promise.resolve(new Response(JSON.stringify(patchUrls(__c[ck])),{
+          status:200,headers:{"Content-Type":"application/json"}
+        }));
+      }
+    }
+    if(!__k)return Promise.reject(new Error("no deploy key"));
+    return _f("https://misiso.com/api/notion/deploy-proxy",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({deployKey:__k,path:path,method:method,body:body})
+    }).then(function(r){
+      var status=r.status;
+      return r.json().then(function(data){
+        return new Response(JSON.stringify(patchUrls(data)),{
+          status:status,
+          headers:{"Content-Type":"application/json"}
+        });
+      });
+    });
+  };
+})();
+</script>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Notion Code Preview"/>
+<meta property="og:description" content="Built with Notion Code Previewer"/>
+<meta property="og:image" content="https://sukarluv-eng.github.io/notion-preview-f254af06/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://sukarluv-eng.github.io/notion-preview-f254af06/og-image.png"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2032%2032'%3E%3Crect%20width%3D'32'%20height%3D'32'%20rx%3D'6'%20fill%3D'%25236366f1'%2F%3E%3Ctext%20x%3D'16'%20y%3D'22'%20text-anchor%3D'middle'%20font-size%3D'18'%20fill%3D'white'%20font-family%3D'sans-serif'%3EN%3C%2Ftext%3E%3C%2Fsvg%3E"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+body {
+  font-family: -apple-system, 'Pretendard', sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+.gradient-text {
+  background: linear-gradient(135deg, #818cf8, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+</style>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script>if(window.Babel)Babel.disableScriptTags=true;</script>
+</head><body><div id="root"></div><script type="module">
+var __stripPlugin=function(){return{visitor:{ImportDeclaration:function(path){var src=path.node.source.value;if(src.indexOf("./")===0||src.indexOf("../")===0)path.remove();},ExportDefaultDeclaration:function(path){var decl=path.node.declaration;if(decl.type==="FunctionDeclaration"||decl.type==="ClassDeclaration"){path.replaceWith(decl);}else{path.replaceWith({type:"VariableDeclaration",kind:"var",declarations:[{type:"VariableDeclarator",id:{type:"Identifier",name:"_default"},init:decl}]});}},ExportNamedDeclaration:function(path){if(path.node.declaration){path.replaceWith(path.node.declaration);}else{path.remove();}},ExportAllDeclaration:function(path){path.remove();}}};};
+var __dedupePlugin=function(){var _s={};return{visitor:{VariableDeclaration:function(p){if(p.parent.type!=="Program")return;if(p.node.kind!=="const"&&p.node.kind!=="let")return;var kept=[];for(var i=0;i<p.node.declarations.length;i++){var d=p.node.declarations[i];var n=d.id&&d.id.type==="Identifier"?d.id.name:null;if(n&&_s[n]){}else{if(n)_s[n]=true;kept.push(d);}}if(kept.length===0){p.remove();}else{p.node.declarations=kept;}}}}};
+var __jsxDecodePlugin=function(){function _d(v){v=v.replace(/\\u\{([0-9a-fA-F]+)\}/g,function(_,h){return String.fromCodePoint(parseInt(h,16));});v=v.replace(/\\u([0-9a-fA-F]{4})/g,function(_,h){return String.fromCharCode(parseInt(h,16));});return v;}return{visitor:{JSXText:function(p){p.node.value=_d(p.node.value);},StringLiteral:function(p){if(!p.parent||p.parent.type!=="JSXAttribute")return;p.node.value=_d(p.node.value);}}}};
+var __code="import React from 'https://esm.sh/react';\nimport ReactDOM from 'https://esm.sh/react-dom/client';\nimport { useState, useEffect, useMemo } from 'https://esm.sh/react';\n\nconst LOG_DB_ID = 'YOUR_LOG_DB_ID';\nconst DICT_DB_ID = 'YOUR_DICT_DB_ID';\n\nconst FALLBACK_LOGS = [\n  { id: '1', date: '2026-04-25', exercise: '벤치프레스', part: '가슴', weight: 60, reps: 10, sets: 4 },\n  { id: '2', date: '2026-04-25', exercise: '인클라인 덤벨프레스', part: '가슴', weight: 20, reps: 12, sets: 3 },\n  { id: '3', date: '2026-04-24', exercise: '데드리프트', part: '등', weight: 100, reps: 5, sets: 5 },\n  { id: '4', date: '2026-04-24', exercise: '랫풀다운', part: '등', weight: 50, reps: 10, sets: 4 },\n  { id: '5', date: '2026-04-23', exercise: '스쿼트', part: '하체', weight: 80, reps: 8, sets: 5 },\n  { id: '6', date: '2026-04-22', exercise: '오버헤드프레스', part: '어깨', weight: 30, reps: 10, sets: 4 },\n];\n\nconst FALLBACK_DICT = [\n  { id: '1', name: '벤치프레스', part: '가슴', diff: '중급', w: 60, r: 10, s: 4, desc: '바벨 플랫 벤치프레스' },\n  { id: '2', name: '스쿼트', part: '하체', diff: '중급', w: 80, r: 8, s: 5, desc: '바벨 백스쿼트' },\n  { id: '3', name: '데드리프트', part: '등', diff: '고급', w: 100, r: 5, s: 5, desc: '컨벤셔널 데드리프트' },\n  { id: '4', name: '오버헤드프레스', part: '어깨', diff: '중급', w: 30, r: 10, s: 4, desc: '바벨 숄더프레스' },\n  { id: '5', name: '바이셉 컬', part: '팔', diff: '초급', w: 12, r: 12, s: 3, desc: '덤벨 이두 컬' },\n  { id: '6', name: '플랭크', part: '코어', diff: '초급', w: 0, r: 1, s: 3, desc: '60초 유지 코어 안정성' },\n  { id: '7', name: '사이드 레터럴 레이즈', part: '어깨', diff: '초급', w: 8, r: 15, s: 3, desc: '덤벨 측면 레이즈' },\n  { id: '8', name: '레그프레스', part: '하체', diff: '초급', w: 120, r: 12, s: 4, desc: '머신 레그프레스' },\n  { id: '9', name: '랫풀다운', part: '등', diff: '초급', w: 50, r: 10, s: 4, desc: '케이블 광배근 풀다운' },\n  { id: '10', name: '딥스', part: '가슴', diff: '중급', w: 0, r: 12, s: 3, desc: '평행봉 체중 딥스' },\n  { id: '11', name: '트라이셉 푸시다운', part: '팔', diff: '초급', w: 15, r: 12, s: 3, desc: '케이블 삼두 푸시다운' },\n  { id: '12', name: '크런치', part: '코어', diff: '초급', w: 0, r: 20, s: 3, desc: '복근 크런치' },\n];\n\nconst PART_COLORS = {\n  '가슴': 'bg-purple-500/10 text-purple-400',\n  '등': 'bg-blue-500/10 text-blue-400',\n  '하체': 'bg-emerald-500/10 text-emerald-400',\n  '어깨': 'bg-orange-500/10 text-orange-400',\n  '팔': 'bg-red-500/10 text-red-400',\n  '코어': 'bg-yellow-500/10 text-yellow-400',\n};\n\nfunction getVal(prop) {\n  if (!prop) return '';\n  switch (prop.type) {\n    case 'title': return prop.title.map(t => t.plain_text).join('');\n    case 'rich_text': return prop.rich_text.map(t => t.plain_text).join('');\n    case 'number': return prop.number ?? '';\n    case 'select': return prop.select?.name ?? '';\n    case 'date': return prop.date?.start ?? '';\n    default: return '';\n  }\n}\n\nfunction Nav({ current }) {\n  const items = [\n    { key: 'home', label: '🏠 홈' },\n    { key: 'record', label: '✏️ 기록' },\n    { key: 'history', label: '📊 조회' },\n    { key: 'recommend', label: '💡 추천' },\n  ];\n  return (\n    <nav className=\"flex items-center justify-between px-6 py-4 bg-slate-800/80 backdrop-blur border-b border-slate-700\">\n      <div className=\"text-xl font-extrabold\">💪 mu-fit</div>\n      <div className=\"flex gap-1\">\n        {items.map(p => (\n          <span key={p.key} className={`px-3 py-1.5 rounded-lg text-sm cursor-pointer transition ${current === p.key ? 'bg-indigo-500/20 text-indigo-400 font-semibold' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700'}`}>\n            {p.label}\n          </span>\n        ))}\n      </div>\n    </nav>\n  );\n}\n\nfunction App() {\n  const [logs, setLogs] = useState(FALLBACK_LOGS);\n  const [dict, setDict] = useState(FALLBACK_DICT);\n  const [loading, setLoading] = useState(true);\n\n  useEffect(() => {\n    let ok = true;\n    Promise.all([\n      fetch(`/api/notion/databases/${LOG_DB_ID}/query`, {\n        method: 'POST', headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify({ page_size: 100 }),\n      }).then(r => r.json()).catch(() => null),\n      fetch(`/api/notion/databases/${DICT_DB_ID}/query`, {\n        method: 'POST', headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify({ page_size: 100 }),\n      }).then(r => r.json()).catch(() => null),\n    ]).then(([ld, dd]) => {\n      if (!ok) return;\n      if (ld?.results?.length) {\n        setLogs(ld.results.map(p => ({\n          id: p.id,\n          date: getVal(p.properties['날짜']),\n          exercise: getVal(p.properties['운동명']),\n          part: getVal(p.properties['부위']),\n          weight: Number(getVal(p.properties['중량(kg)'])) || 0,\n          reps: Number(getVal(p.properties['횟수'])) || 0,\n          sets: Number(getVal(p.properties['세트'])) || 0,\n        })));\n      }\n      if (dd?.results?.length) {\n        setDict(dd.results.map(p => ({\n          id: p.id, name: getVal(p.properties['운동명']),\n          part: getVal(p.properties['부위']), diff: getVal(p.properties['난이도']),\n          w: Number(getVal(p.properties['추천 중량(kg)'])) || 0,\n          r: Number(getVal(p.properties['추천 횟수'])) || 0,\n          s: Number(getVal(p.properties['추천 세트'])) || 0,\n          desc: getVal(p.properties['설명']),\n        })));\n      }\n    }).finally(() => ok && setLoading(false));\n    return () => { ok = false; };\n  }, []);\n\n  const todayStr = new Date().toLocaleDateString('ko-KR', {\n    year: 'numeric', month: 'long', day: 'numeric', weekday: 'long',\n  });\n\n  const recentParts = useMemo(() => {\n    const d = new Date(); d.setDate(d.getDate() - 3);\n    return [...new Set(logs.filter(l => new Date(l.date) >= d).map(l => l.part))];\n  }, [logs]);\n\n  const recommendations = useMemo(() => {\n    return dict.filter(d => d.part && !recentParts.includes(d.part)).slice(0, 4);\n  }, [dict, recentParts]);\n\n  const stats = useMemo(() => {\n    const d = new Date(); d.setDate(d.getDate() - 7);\n    const w = logs.filter(l => new Date(l.date) >= d);\n    return {\n      days: [...new Set(w.map(l => l.date))].length,\n      count: w.length,\n      sets: w.reduce((s, l) => s + l.sets, 0),\n      volume: w.reduce((s, l) => s + l.weight * l.reps * l.sets, 0),\n    };\n  }, [logs]);\n\n  if (loading) return (\n    <div className=\"min-h-screen bg-slate-900\">\n      <Nav current=\"home\" />\n      <div className=\"flex items-center justify-center h-64 text-slate-400\">불러오는 중...</div>\n    </div>\n  );\n\n  return (\n    <div className=\"min-h-screen bg-slate-900 text-slate-200\">\n      <Nav current=\"home\" />\n      <div className=\"max-w-4xl mx-auto px-6 py-8\">\n        <div className=\"text-center mb-10\">\n          <h1 className=\"text-4xl font-extrabold gradient-text mb-2\">mu-fit</h1>\n          <p className=\"text-slate-400\">{todayStr}</p>\n        </div>\n        <section className=\"mb-10\">\n          <h2 className=\"text-lg font-bold mb-4\">🎯 오늘의 추천 운동</h2>\n          {recommendations.length === 0 ? (\n            <p className=\"text-slate-500 text-sm\">모든 부위를 최근 운동했습니다. 휴식 추천 🧘</p>\n          ) : (\n            <div className=\"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4\">\n              {recommendations.map(ex => (\n                <div key={ex.id} className=\"bg-slate-800 border border-slate-700 rounded-xl p-5 hover:-translate-y-1 transition-transform\">\n                  <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold mb-3 ${PART_COLORS[ex.part] || 'bg-slate-600/20 text-slate-400'}`}>\n                    {ex.part}\n                  </span>\n                  <div className=\"font-bold mb-1\">{ex.name}</div>\n                  <div className=\"text-sm text-slate-400 mb-2\">{ex.desc}</div>\n                  <div className=\"text-xs text-slate-500\">{ex.w > 0 ? `${ex.w}kg · ` : ''}{ex.r}회 × {ex.s}세트</div>\n                </div>\n              ))}\n            </div>\n          )}\n        </section>\n        <section>\n          <h2 className=\"text-lg font-bold mb-4\">📈 이번 주 요약</h2>\n          <div className=\"grid grid-cols-2 sm:grid-cols-4 gap-4\">\n            {[\n              { v: stats.days, l: '운동 일수' },\n              { v: stats.count, l: '총 운동 수' },\n              { v: stats.sets, l: '총 세트' },\n              { v: stats.volume.toLocaleString(), l: '총 볼륨(kg)' },\n            ].map(s => (\n              <div key={s.l} className=\"bg-slate-800 border border-slate-700 rounded-xl p-5 text-center\">\n                <div className=\"text-3xl font-extrabold text-indigo-400\">{s.v}</div>\n                <div className=\"text-sm text-slate-400 mt-1\">{s.l}</div>\n              </div>\n            ))}\n          </div>\n        </section>\n      </div>\n    </div>\n  );\n}\n\nReactDOM.createRoot(document.getElementById('root')).render(<App />);";
+var __result=Babel.transform(__code,{filename:"app.tsx",presets:["react","typescript"],plugins:[__stripPlugin,__dedupePlugin,__jsxDecodePlugin],generatorOpts:{jsescOption:{minimal:true}},sourceType:"module"});
+var __s=document.createElement("script");__s.type="module";__s.textContent=__result.code;document.head.appendChild(__s);
+</script>
+</body></html>
